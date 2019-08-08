@@ -41,14 +41,19 @@ For a quick summary, here's my list of features:
     * Get a placement id from a position.
     * Get a position from a placement id.
 * Wire compaction:
-  * (3,0),(2,0),...,(10,0) becomes (3,0),**(1,0)**,(10,0)
+  * (3,0),(2,0),...,(10,0) becomes (3,0),**(1,0)**,(10,0) below the wraps,
   * The highlighted item is a direction to go until
     reaching the final coordinate.
+  * Furthermore, you do not need to worry about this language, all the
+    encoding from one form to another is done automatically.
 * [Json](https://www.json.org/) support:
   * Write placement and routing information using
     the json format.
   * Write statistics using the json format.
-* Get the area of the placed and routed circuit at constant cost
-  at any point in time.
+    * Number of wires used.
+    * Area occupied exclusively by the wires.
+    * Area occupied exclusively by the placements.
+* Get the overall area of the placed and routed circuit at constant
+  cost at any point in time.
 
 ## Examples
