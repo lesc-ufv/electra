@@ -32,13 +32,12 @@ FetchContent_Declare(
   GIT_TAG v3.7.0
 )
 
-FetchContent_Declare(
-  alice
-  GIT_REPOSITORY git@github.com:msoeken/alice.git
-)
-
 # Library options
 set(JSON_BuildTests OFF)
 
 # Populate Libraries
-Fetch("catch;alice;json")
+if(${PROJECT_NAME}_tests)
+  Fetch("catch;json")
+else()
+  Fetch("json")
+endif()

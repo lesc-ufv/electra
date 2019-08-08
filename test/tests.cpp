@@ -11,3 +11,4 @@
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
 #include "include/electra/wire/encode.cpp"
+#include "include/electra/wires.cpp"

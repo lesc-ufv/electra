@@ -2,14 +2,10 @@
 /**
  * @company     : Universidade Federal de Viçosa - Florestal
  * @author      : Ruan E. Formigoni (ruanformigoni@gmail.com)
- * @file        : wire
- * @created     : Sunday Aug 04, 2019 18:50:03 -03
+ * @file        : wires
+ * @created     : Wednesday Aug 07, 2019 21:55:11 -03
  * @license     : MIT
  * @description : Electra - Field-Coupled Nanocomputing Data Structures
 */
 
-#pragma once
-
-namespace electra {
-
-} // namespace electra
+#include <electra/wires.hpp>
