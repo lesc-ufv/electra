@@ -9,5 +9,6 @@
 ######################################################################
 
 add_library(electra INTERFACE)
+target_link_libraries(electra INTERFACE nlohmann_json::nlohmann_json)
 target_include_directories(electra INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(electra INTERFACE cxx_std_17)
