@@ -9,6 +9,22 @@
 */
 
 #define CATCH_CONFIG_MAIN
+
 #include <catch2/catch.hpp>
+
+template<typename InIt, typename T = typename InIt::value_type>
+void compare(InIt&& cbegin, InIt&& cend, InIt&& target)
+{
+  for( auto it{cbegin}; it!=cend;)
+  {
+    REQUIRE(it->first == target->first);
+    REQUIRE(it->second == target->second);
+    ++it;
+    ++target;
+  }
+}
+
 #include "include/electra/wire/encode.cpp"
+#include "include/electra/wire/decode.cpp"
 #include "include/electra/wires.cpp"
+

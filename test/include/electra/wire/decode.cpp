@@ -2,19 +2,15 @@
 /**
  * @company     : Universidade Federal de Viçosa - Florestal
  * @author      : Ruan E. Formigoni (ruanformigoni@gmail.com)
- * @file        : encode
- * @created     : Tuesday Aug 06, 2019 10:56:25 -03
+ * @file        : decode
+ * @created     : Friday Aug 09, 2019 01:28:08 -03
  * @license     : MIT
  * @description : Electra - Field-Coupled Nanocomputing Data Structures
 */
 
-#include <vector>
-#include <utility>
-#include <cstdint>
+#include <electra/wire/decode.hpp>
 
-#include <electra/wire/encode.hpp>
-
-TEST_CASE("Encoding a wire", "[encode]")
+TEST_CASE("Decoding a Wire")
 {
   using Wire = std::vector<std::pair<int32_t,int32_t>>;
 
@@ -31,14 +27,14 @@ TEST_CASE("Encoding a wire", "[encode]")
 
   SECTION("Vertical Orientation")
   {
-    Wire w1 {{0,3},{0,2},{0,1},{0,0}};
-    Wire w2 {{0,0},{0,1},{0,2},{0,3}};
+    Wire w1 {{0,3},{0,-1},{0,0}};
+    Wire w2 {{0,0},{0,1},{0,3}};
 
-    auto e1 {electra::wire::encode(w1.cbegin(),w1.cend())};
-    auto e2 {electra::wire::encode(w2.cbegin(),w2.cend())};
+    auto e1 {electra::wire::decode(w1.cbegin(),w1.cend())};
+    auto e2 {electra::wire::decode(w2.cbegin(),w2.cend())};
 
-    Wire s1 {{0,3},{0,-1},{0,0}};
-    Wire s2 {{0,0},{0,1},{0,3}};
+    Wire s1 {{0,3},{0,2},{0,1},{0,0}};
+    Wire s2 {{0,0},{0,1},{0,2},{0,3}};
 
     REQUIRE(e1.size() == s1.size());
     REQUIRE(e2.size() == s2.size());
@@ -49,14 +45,14 @@ TEST_CASE("Encoding a wire", "[encode]")
 
   SECTION("Horizontal Orientation")
   {
-    Wire w1{{0,0},{1,0},{2,0},{3,0}};
-    Wire w2{{3,0},{2,0},{1,0},{0,0}};
+    Wire w1 {{0,0},{1,0},{3,0}};
+    Wire w2 {{3,0},{-1,0},{0,0}};
 
-    auto e1 {electra::wire::encode(w1.cbegin(),w1.cend())};
-    auto e2 {electra::wire::encode(w2.cbegin(),w2.cend())};
+    auto e1 {electra::wire::decode(w1.cbegin(),w1.cend())};
+    auto e2 {electra::wire::decode(w2.cbegin(),w2.cend())};
 
-    Wire s1 {{0,0},{1,0},{3,0}};
-    Wire s2 {{3,0},{-1,0},{0,0}};
+    Wire s1{{0,0},{1,0},{2,0},{3,0}};
+    Wire s2{{3,0},{2,0},{1,0},{0,0}};
 
     REQUIRE(e1.size() == s1.size());
     REQUIRE(e2.size() == s2.size());
@@ -68,47 +64,48 @@ TEST_CASE("Encoding a wire", "[encode]")
   SECTION("Mixed Orientations")
   {
     /* Right and Upwards */
-    Wire w1{{0,0},{1,0},{2,0},{3,0},{3,-1},{3,-2},{3,-3}};
+    Wire w1 {{0,0},{1,0},{3,0},{0,-1},{3,-3}};
     /* Right and Downwards */
-    Wire w2{{0,0},{1,0},{2,0},{3,0},{3,1},{3,2},{3,3}};
+    Wire w2 {{0,0},{1,0},{3,0},{0,1},{3,3}};
     /* Left and Downwards */
-    Wire w3{{3,0},{2,0},{1,0},{0,0},{0,1},{0,2},{0,3}};
+    Wire w3 {{3,0},{-1,0},{0,0},{0,1},{0,3}};
     /* Left and Upwards */
-    Wire w4{{3,0},{2,0},{1,0},{0,0},{0,-1},{0,-2},{0,-3}};
+    Wire w4 {{3,0},{-1,0},{0,0},{0,-1},{0,-3}};
     /* Upwards and Right */
-    Wire w5 {{10,5},{10,4},{10,3},{10,2},{11,2},{12,2}};
+    Wire w5 {{10,5},{0,-1},{10,2},{1,0},{12,2}};
     /* Upwards and left */
-    Wire w6 {{10,5},{10,4},{10,3},{10,2},{9,2},{8,2},{7,2}};
+    Wire w6 {{10,5},{0,-1},{10,2},{-1,0},{7,2}};
     /* Downwards and Right */
-    Wire w7 {{10,5},{10,6},{10,7},{10,8},{11,8},{12,8},{13,8}};
+    Wire w7 {{10,5},{0,1},{10,8},{1,0},{13,8}};
     /* Downwards and left */
-    Wire w8 {{10,5},{10,6},{10,7},{10,8},{9,8},{8,8},{7,8}};
+    Wire w8 {{10,5},{0,1},{10,8},{-1,0},{7,8}};
 
-    auto e1 {electra::wire::encode(w1.cbegin(),w1.cend())};
-    auto e2 {electra::wire::encode(w2.cbegin(),w2.cend())};
-    auto e3 {electra::wire::encode(w3.cbegin(),w3.cend())};
-    auto e4 {electra::wire::encode(w4.cbegin(),w4.cend())};
-    auto e5 {electra::wire::encode(w5.cbegin(),w5.cend())};
-    auto e6 {electra::wire::encode(w6.cbegin(),w6.cend())};
-    auto e7 {electra::wire::encode(w7.cbegin(),w7.cend())};
-    auto e8 {electra::wire::encode(w8.cbegin(),w8.cend())};
+    auto e1 {electra::wire::decode(w1.cbegin(),w1.cend())};
+    auto e2 {electra::wire::decode(w2.cbegin(),w2.cend())};
+    auto e3 {electra::wire::decode(w3.cbegin(),w3.cend())};
+    auto e4 {electra::wire::decode(w4.cbegin(),w4.cend())};
+    auto e5 {electra::wire::decode(w5.cbegin(),w5.cend())};
+    auto e6 {electra::wire::decode(w6.cbegin(),w6.cend())};
+    auto e7 {electra::wire::decode(w7.cbegin(),w7.cend())};
+    auto e8 {electra::wire::decode(w8.cbegin(),w8.cend())};
 
     /* Right and Upwards */
-    Wire s1 {{0,0},{1,0},{3,0},{0,-1},{3,-3}};
+    Wire s1{{0,0},{1,0},{2,0},{3,0},{3,-1},{3,-2},{3,-3}};
     /* Right and Downwards */
-    Wire s2 {{0,0},{1,0},{3,0},{0,1},{3,3}};
+    Wire s2{{0,0},{1,0},{2,0},{3,0},{3,1},{3,2},{3,3}};
     /* Left and Downwards */
-    Wire s3 {{3,0},{-1,0},{0,0},{0,1},{0,3}};
+    Wire s3{{3,0},{2,0},{1,0},{0,0},{0,1},{0,2},{0,3}};
     /* Left and Upwards */
-    Wire s4 {{3,0},{-1,0},{0,0},{0,-1},{0,-3}};
+    Wire s4{{3,0},{2,0},{1,0},{0,0},{0,-1},{0,-2},{0,-3}};
     /* Upwards and Right */
-    Wire s5 {{10,5},{0,-1},{10,2},{1,0},{12,2}};
+    Wire s5 {{10,5},{10,4},{10,3},{10,2},{11,2},{12,2}};
     /* Upwards and left */
-    Wire s6 {{10,5},{0,-1},{10,2},{-1,0},{7,2}};
+    Wire s6 {{10,5},{10,4},{10,3},{10,2},{9,2},{8,2},{7,2}};
     /* Downwards and Right */
-    Wire s7 {{10,5},{0,1},{10,8},{1,0},{13,8}};
+    Wire s7 {{10,5},{10,6},{10,7},{10,8},{11,8},{12,8},{13,8}};
     /* Downwards and left */
-    Wire s8 {{10,5},{0,1},{10,8},{-1,0},{7,8}};
+    Wire s8 {{10,5},{10,6},{10,7},{10,8},{9,8},{8,8},{7,8}};
+
 
     REQUIRE(e1.size() == s1.size());
     REQUIRE(e2.size() == s2.size());
