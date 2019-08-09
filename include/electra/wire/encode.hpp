@@ -55,6 +55,7 @@ std::vector<T> encode( InIt&& it_beg, InIt&& it_end )
   /*
    * Iterate through the list
    */
+  bool first{true};
   for( auto it{it_beg}; it!=it_end; )
   {
     Direction dir;
@@ -76,11 +77,6 @@ std::vector<T> encode( InIt&& it_beg, InIt&& it_end )
       }
 
       /*
-       * Record initial position
-       */
-      T&& yi {it->first, it->second};
-
-      /*
        * Advance until an element is found
        * such that its first element is not
        * equal to the one of its predecessor
@@ -99,35 +95,45 @@ std::vector<T> encode( InIt&& it_beg, InIt&& it_end )
       while(it->first == (it+1)->first);
 
       /*
-       * Record the last position
-       */
-      T&& yf{};
-
-      if( it == it_end )
-      {
-        yf = std::make_pair((it-1)->first, (it-1)->second);
-      }
-      else
-      {
-        yf = std::make_pair(it->first, it->second);
-      }
-
-      /*
        * Given a position, indicate the direction
        * in which the list must be expanded to
        * obtain the original one
        */
       if( dir == Direction::UP )
       {
-        list.emplace_back( std::move( yi ) );
-        list.emplace_back( std::make_pair( 0, -1 ) );
-        list.emplace_back( std::move( yf ) );
+        if( first )
+        {
+          list.emplace_back( *it_beg );
+        }
+
+        list.emplace_back( 0, -1 );
+
+        if( it == it_end )
+        {
+          list.emplace_back( *(it-1) );
+        }
+        else
+        {
+          list.emplace_back( *it );
+        }
       }
       else
       {
-        list.emplace_back( std::move( yi ) );
-        list.emplace_back( std::make_pair( 0, 1 ) );
-        list.emplace_back( std::move( yf ) );
+        if( first )
+        {
+          list.push_back( *it_beg );
+        }
+
+        list.emplace_back( 0, 1 );
+
+        if( it == it_end )
+        {
+          list.push_back( *(it-1) );
+        }
+        else
+        {
+          list.push_back( *it );
+        }
       }
     }
 
@@ -147,10 +153,6 @@ std::vector<T> encode( InIt&& it_beg, InIt&& it_end )
         dir = Direction::LEFT;
       }
 
-      T&& xi {it->first, it->second};
-
-      bool end{false};
-
       do
       {
         if( it == it_end )
@@ -164,28 +166,41 @@ std::vector<T> encode( InIt&& it_beg, InIt&& it_end )
       }
       while( it->second == (it+1)->second );
 
-      T&& xf{};
-
-      if( it == it_end )
-      {
-        xf = std::make_pair((it-1)->first, (it-1)->second);
-      }
-      else
-      {
-        xf = std::make_pair(it->first, it->second);
-      }
-
       if( dir == Direction::LEFT )
       {
-        list.emplace_back( std::move( xi ) );
-        list.emplace_back( std::make_pair( -1, 0 ) );
-        list.emplace_back( std::move( xf ) );
+        if( first )
+        {
+          list.emplace_back( *it_beg );
+        }
+
+        list.emplace_back( -1, 0 );
+
+        if( it == it_end )
+        {
+          list.emplace_back( *(it-1) );
+        }
+        else
+        {
+          list.emplace_back( *it );
+        }
       }
       else
       {
-        list.emplace_back( std::move( xi ) );
-        list.emplace_back( std::make_pair( 1, 0 ) );
-        list.emplace_back( std::move( xf ) );
+        if( first )
+        {
+          list.push_back( *it_beg );
+        }
+
+        list.emplace_back( 1, 0 );
+
+        if( it == it_end )
+        {
+          list.push_back( *(it-1) );
+        }
+        else
+        {
+          list.push_back( *it );
+        }
       }
     }
 
@@ -194,7 +209,11 @@ std::vector<T> encode( InIt&& it_beg, InIt&& it_end )
      * if it is not unidirectional in one of its
      * elements
      */
-    if( it != it_end ) ++it;
+    if( it != it_end )
+    {
+      ++it;
+    }
+    first = false;
   }
 
   return list;
