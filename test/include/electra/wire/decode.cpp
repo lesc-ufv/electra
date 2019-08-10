@@ -18,7 +18,7 @@ TEST_CASE("Decoding a Wire")
   {
     Wire w {{4,2}};
 
-    auto e {electra::wire::encode(w.cbegin(),w.cend())};
+    auto e {electra::wire::decode(w.cbegin(),w.cend())};
 
     Wire s {{4,2}};
 
