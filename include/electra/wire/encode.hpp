@@ -209,10 +209,7 @@ std::vector<T> encode( InIt&& it_beg, InIt&& it_end )
     // if it is not unidirectional in one of its
     // elements
     //
-    if( it != it_end )
-    {
-      ++it;
-    }
+    if( it+1 == it_end ) it = it_end;
     first = false;
   }
 
