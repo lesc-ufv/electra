@@ -1,12 +1,12 @@
-/* vim: set ts=2 sw=2 tw=0 et :*/
-/**
- * @company     : Universidade Federal de Viçosa - Florestal
- * @author      : Ruan E. Formigoni (ruanformigoni@gmail.com)
- * @file        : encode
- * @created     : Tuesday Aug 06, 2019 10:56:25 -03
- * @license     : MIT
- * @description : Electra - Field-Coupled Nanocomputing Data Structures
-*/
+// vim: set ts=2 sw=2 tw=0 et :*/
+//
+// @company     : Universidade Federal de Viçosa - Florestal
+// @author      : Ruan E. Formigoni (ruanformigoni@gmail.com)
+// @file        : encode
+// @created     : Tuesday Aug 06, 2019 10:56:25 -03
+// @license     : MIT
+// @description : Electra - Field-Coupled Nanocomputing Data Structures
+//
 
 #include <vector>
 #include <utility>
@@ -67,21 +67,21 @@ TEST_CASE("Encoding a wire", "[encode]")
 
   SECTION("Mixed Orientations")
   {
-    /* Right and Upwards */
+    // Right and Upwards
     Wire w1{{0,0},{1,0},{2,0},{3,0},{3,-1},{3,-2},{3,-3}};
-    /* Right and Downwards */
+    // Right and Downwards
     Wire w2{{0,0},{1,0},{2,0},{3,0},{3,1},{3,2},{3,3}};
-    /* Left and Downwards */
+    // Left and Downwards
     Wire w3{{3,0},{2,0},{1,0},{0,0},{0,1},{0,2},{0,3}};
-    /* Left and Upwards */
+    // Left and Upwards
     Wire w4{{3,0},{2,0},{1,0},{0,0},{0,-1},{0,-2},{0,-3}};
-    /* Upwards and Right */
+    // Upwards and Right
     Wire w5 {{10,5},{10,4},{10,3},{10,2},{11,2},{12,2}};
-    /* Upwards and left */
+    // Upwards and left
     Wire w6 {{10,5},{10,4},{10,3},{10,2},{9,2},{8,2},{7,2}};
-    /* Downwards and Right */
+    // Downwards and Right
     Wire w7 {{10,5},{10,6},{10,7},{10,8},{11,8},{12,8},{13,8}};
-    /* Downwards and left */
+    // Downwards and left
     Wire w8 {{10,5},{10,6},{10,7},{10,8},{9,8},{8,8},{7,8}};
 
     auto e1 {electra::wire::encode(w1.cbegin(),w1.cend())};
@@ -93,21 +93,21 @@ TEST_CASE("Encoding a wire", "[encode]")
     auto e7 {electra::wire::encode(w7.cbegin(),w7.cend())};
     auto e8 {electra::wire::encode(w8.cbegin(),w8.cend())};
 
-    /* Right and Upwards */
+    // Right and Upwards
     Wire s1 {{0,0},{1,0},{3,0},{0,-1},{3,-3}};
-    /* Right and Downwards */
+    // Right and Downwards
     Wire s2 {{0,0},{1,0},{3,0},{0,1},{3,3}};
-    /* Left and Downwards */
+    // Left and Downwards
     Wire s3 {{3,0},{-1,0},{0,0},{0,1},{0,3}};
-    /* Left and Upwards */
+    // Left and Upwards
     Wire s4 {{3,0},{-1,0},{0,0},{0,-1},{0,-3}};
-    /* Upwards and Right */
+    // Upwards and Right
     Wire s5 {{10,5},{0,-1},{10,2},{1,0},{12,2}};
-    /* Upwards and left */
+    // Upwards and left
     Wire s6 {{10,5},{0,-1},{10,2},{-1,0},{7,2}};
-    /* Downwards and Right */
+    // Downwards and Right
     Wire s7 {{10,5},{0,1},{10,8},{1,0},{13,8}};
-    /* Downwards and left */
+    // Downwards and left
     Wire s8 {{10,5},{0,1},{10,8},{-1,0},{7,8}};
 
     REQUIRE(e1.size() == s1.size());

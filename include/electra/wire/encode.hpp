@@ -1,28 +1,28 @@
-/* vim: set ts=2 sw=2 tw=0 et :*/
-/**
- * @company     : Universidade Federal de Viçosa - Florestal
- * @author      : Ruan E. Formigoni (ruanformigoni@gmail.com)
- * @file        : encode
- * @created     : Tuesday Aug 06, 2019 10:31:23 -03
- * @license     : MIT
- * @description : Electra - Field-Coupled Nanocomputing Data Structures
-*/
+// vim: set ts=2 sw=2 tw=0 et :
+//
+// @company     : Universidade Federal de Viçosa - Florestal
+// @author      : Ruan E. Formigoni (ruanformigoni@gmail.com)
+// @file        : encode
+// @created     : Tuesday Aug 06, 2019 10:31:23 -03
+// @license     : MIT
+// @description : Electra - Field-Coupled Nanocomputing Data Structures
+//
 
 #pragma once
 
 #include <vector>
 
-/*
- * Algorithm's Description:
- * * Reduce a list length using directional separators. E.g:
- * * {{0,1},{0,2},{0,3},{0,4},{0,5}} becomes
- * * {{0,1},{0,1},{0,5}}
- * * Where the second pair indicates the direction for which
- * * the list must be expanded to reach the original size.
- * Cavefeats:
- * * A list must change only one of its pair elements
- * * at a time, sequentially, else the behaviour is undefined
- */
+//
+// Algorithm's Description:
+//   Reduce a list length using directional separators. E.g:
+//   {{0,1},{0,2},{0,3},{0,4},{0,5}} becomes
+//   {{0,1},{0,1},{0,5}}
+//   Where the second pair indicates the direction for which
+//   the list must be expanded to reach the original size.
+// Cavefeats:
+//   A list must change only one of its pair elements
+//   at a time, sequentially, else the behaviour is undefined
+//
 namespace electra::wire
 {
 
@@ -30,9 +30,9 @@ template<typename InIt, typename T = typename InIt::value_type>
 std::vector<T> encode( InIt&& it_beg, InIt&& it_end )
 {
 
-  /*
-   * Define the directions enumeration
-   */
+  //
+  // Define the directions enumeration
+  //
   enum class Direction
   {
     UP,
@@ -43,28 +43,28 @@ std::vector<T> encode( InIt&& it_beg, InIt&& it_end )
 
   std::vector<T> list;
 
-  /*
-   * If the list has size 1, return its only element
-   */
+  //
+  // If the list has size 1, return its only element
+  //
   if( it_beg == it_end-1 )
   {
     list.push_back(*it_beg);
     return list;
   }
 
-  /*
-   * Iterate through the list
-   */
+  //
+  // Iterate through the list
+  //
   bool first{true};
   for( auto it{it_beg}; it!=it_end; )
   {
     Direction dir;
 
-    /*
-     * The first element of the item
-     * is equal to the one of its
-     * sucessor.
-     */
+    //
+    // The first element of the item
+    // is equal to the one of its
+    // sucessor.
+    //
     if( it->first == (it+1)->first )
     {
       if( it->second < (it+1)->second )
@@ -76,11 +76,11 @@ std::vector<T> encode( InIt&& it_beg, InIt&& it_end )
         dir = Direction::UP;
       }
 
-      /*
-       * Advance until an element is found
-       * such that its first element is not
-       * equal to the one of its predecessor
-       */
+      //
+      // Advance until an element is found
+      // such that its first element is not
+      // equal to the one of its predecessor
+      //
       do
       {
         if( it == it_end )
@@ -94,11 +94,11 @@ std::vector<T> encode( InIt&& it_beg, InIt&& it_end )
       }
       while(it->first == (it+1)->first);
 
-      /*
-       * Given a position, indicate the direction
-       * in which the list must be expanded to
-       * obtain the original one
-       */
+      //
+      // Given a position, indicate the direction
+      // in which the list must be expanded to
+      // obtain the original one
+      //
       if( dir == Direction::UP )
       {
         if( first )
@@ -137,11 +137,11 @@ std::vector<T> encode( InIt&& it_beg, InIt&& it_end )
       }
     }
 
-    /*
-     * The second element of the item
-     * is equal to the second element
-     * of its sucessor.
-     */
+    //
+    // The second element of the item
+    // is equal to the second element
+    // of its sucessor.
+    //
     else
     {
       if( it->first < (it+1)->first )
@@ -204,11 +204,11 @@ std::vector<T> encode( InIt&& it_beg, InIt&& it_end )
       }
     }
 
-    /*
-     * Move to process the next coordinate of the list
-     * if it is not unidirectional in one of its
-     * elements
-     */
+    //
+    // Move to process the next coordinate of the list
+    // if it is not unidirectional in one of its
+    // elements
+    //
     if( it != it_end )
     {
       ++it;
