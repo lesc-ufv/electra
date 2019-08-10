@@ -27,4 +27,5 @@ void compare(InIt&& cbegin, InIt&& cend, InIt&& target)
 #include "include/electra/wire/encode.cpp"
 #include "include/electra/wire/decode.cpp"
 #include "include/electra/wires.cpp"
+#include "include/electra/area.cpp"
 

@@ -1,12 +1,12 @@
-/* vim: set ts=2 sw=2 tw=0 et :*/
-/**
- * @company     : Universidade Federal de Viçosa - Florestal
- * @author      : Ruan E. Formigoni (ruanformigoni@gmail.com)
- * @file        : wire
- * @created     : Sunday Aug 04, 2019 18:50:03 -03
- * @license     : MIT
- * @description : Electra - Field-Coupled Nanocomputing Data Structures
-*/
+// vim: set ts=2 sw=2 tw=0 et :
+//
+// @company     : Universidade Federal de Viçosa - Florestal
+// @author      : Ruan E. Formigoni (ruanformigoni@gmail.com)
+// @file        : wire
+// @created     : Sunday Aug 04, 2019 18:50:03 -03
+// @license     : MIT
+// @description : Electra - Field-Coupled Nanocomputing Data Structures
+//
 
 #pragma once
 
@@ -17,6 +17,8 @@
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include <iostream>
+
+#include <electra/area.hpp>
 
 namespace electra::wire
 {
@@ -29,16 +31,17 @@ namespace electra::wire
   template<typename T>
   class Wires
   {
-    /* Member data elements */
     private:
+    // Private Members
       std::unique_ptr<Container<T>> wires;
+      std::unique_ptr<area::Area<T>> area;
     public:
-    /* Constructors */
+    // Constructors
       Wires();
-    /* Iterators */
+    // Iterators
       wire_const_iterator<T> cbegin() const noexcept;
       wire_const_iterator<T> cend() const noexcept;
-    /* Public Methods */
+    // Public Methods
       template<typename U = std::vector<std::pair<T,T>>>
       void add(U&& u) noexcept;
       template<typename U = std::pair<T,T>>
@@ -50,28 +53,31 @@ namespace electra::wire
       template<typename U>
       void read(U&& filename) noexcept;
       auto size() const noexcept;
+      auto get_area() const noexcept;
     private:
-    /* Private Methods */
+    // Private Methods
       auto json() const noexcept;
       template<typename U>
       auto find_if(U&& a, U&& b) noexcept;
-    /* Operators */
+    public:
+    // Operators
       template<typename U>
       friend std::ostream& operator<<(std::ostream& os, Wires<U> const& wires);
   };
 
-  /*
-   * Constructors
-   */
+  //
+  // Constructors
+  //
   template<typename T>
   Wires<T>::Wires()
     : wires(std::make_unique<Container<T>>())
+    , area(std::make_unique<area::Area<T>>())
   {
   }
 
-  /*
-   * Iterators
-   */
+  //
+  // Iterators
+  //
   template<typename T>
   wire_const_iterator<T> Wires<T>::cbegin() const noexcept
   {
@@ -84,13 +90,14 @@ namespace electra::wire
     return this->wires->cend();
   }
 
-  /*
-   * Methods
-   */
+  //
+  // Methods
+  //
   template<typename T>
   template<typename U>
   void Wires<T>::add(U&& u) noexcept
   {
+    area->set(u);
     this->wires->emplace_back(wire::encode(u.cbegin(), u.cend()));
   }
 
@@ -108,6 +115,13 @@ namespace electra::wire
     auto it {this->find_if(std::forward<U>(a),std::forward<U>(b))};
 
     if( it == this->wires->cend() ) return;
+
+    //
+    // Decode the wire to unset each region from
+    // the area class
+    //
+    auto decoded_wire { decode(it->cbegin(), it->cend()) };
+    area->unset( decoded_wire );
 
     this->wires->erase( it );
   }
@@ -148,9 +162,15 @@ namespace electra::wire
     return this->wires->size();
   }
 
-  /*
-   * Private Methods
-   */
+  template<typename T>
+  auto Wires<T>::get_area() const noexcept
+  {
+    return this->area->get();
+  }
+
+  //
+  // Private Methods
+  //
   template<typename T>
   auto Wires<T>::json() const noexcept
   {
@@ -175,9 +195,9 @@ namespace electra::wire
     );
   }
 
-  /*
-   * Operators
-   */
+  //
+  // Operators
+  //
   template<typename U>
   std::ostream& operator<<(std::ostream& os, Wires<U> const& wires)
   {
