@@ -26,7 +26,7 @@ namespace electra::wire
   using Container = std::vector<std::vector<std::pair<T,T>>>;
 
   template<typename T>
-  using wire_const_iterator = typename Container<T>::const_iterator;
+  using const_iterator = typename Container<T>::const_iterator;
 
   template<typename T>
   class Wires
@@ -39,8 +39,8 @@ namespace electra::wire
     // Constructors
       Wires();
     // Iterators
-      wire_const_iterator<T> cbegin() const noexcept;
-      wire_const_iterator<T> cend() const noexcept;
+      const_iterator<T> cbegin() const noexcept;
+      const_iterator<T> cend() const noexcept;
     // Public Methods
       template<typename U = std::vector<std::pair<T,T>>>
       void add(U&& u) noexcept;
@@ -79,13 +79,13 @@ namespace electra::wire
   // Iterators
   //
   template<typename T>
-  wire_const_iterator<T> Wires<T>::cbegin() const noexcept
+  const_iterator<T> Wires<T>::cbegin() const noexcept
   {
     return this->wires->cbegin();
   }
 
   template<typename T>
-  wire_const_iterator<T> Wires<T>::cend() const noexcept
+  const_iterator<T> Wires<T>::cend() const noexcept
   {
     return this->wires->cend();
   }
