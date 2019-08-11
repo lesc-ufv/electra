@@ -11,6 +11,10 @@
 #pragma once
 
 #include <vector>
+#include <electra/wire/traits.hpp>
+
+namespace electra::wire
+{
 
 //
 // Algorithm's Description:
@@ -23,12 +27,25 @@
 //   A list must change only one of its pair elements
 //   at a time, sequentially, else the behaviour is undefined
 //
-namespace electra::wire
+template<typename InIt>
+auto encode( InIt&& it_beg, InIt&& it_end )
 {
+  //
+  // Check for traits
+  //
+  static_assert( traits::has_value_type<InIt>(),
+    "\n\n\033[91;1m * \033[mThe type has no value_type attribute\n" );
 
-template<typename InIt, typename T = typename InIt::value_type>
-std::vector<T> encode( InIt&& it_beg, InIt&& it_end )
-{
+  static_assert( traits::is_iterator<InIt>(),
+    "\n\n\033[91;1m * \033[mThe type is not an iterator\n" );
+
+  static_assert( std::is_same_v< typename std::iterator_traits<InIt>::iterator_category,
+                  typename std::bidirectional_iterator_tag > ||
+                 std::is_same_v< typename std::iterator_traits<InIt>::iterator_category,
+                  typename std::random_access_iterator_tag >,
+    "\n\n\033[91;1m * \033[mThe iterator is not bidirectional or random access\n" );
+
+  using T = typename InIt::value_type;
 
   //
   // Define the directions enumeration
