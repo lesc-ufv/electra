@@ -16,35 +16,38 @@ TEST_CASE("Placements testing unit", "[placements]")
 
   SECTION("Insertion")
   {
-    placements.insert( {{{8,8},9},{{3,8},8}} );
+    placements.insert( {{8,8},9} );
+    placements.insert( {{3,8},8} );
   }
 
   SECTION("LookUp")
   {
-    placements.insert( {{{8,8},9},{{3,8},8}} );
+    placements.insert( {{8,8},9} );
+    placements.insert( {{3,8},8} );
 
     REQUIRE( placements.find(9) );
     REQUIRE( placements.find(8) );
     REQUIRE_FALSE( placements.find(4) );
     REQUIRE_FALSE( placements.find(3) );
 
-    REQUIRE( placements.at({8,8}) );
-    REQUIRE( placements.at({3,8}) );
+    REQUIRE( placements.at( {8,8}) );
+    REQUIRE( placements.at( {3,8}) );
     REQUIRE_FALSE( placements.at({7,8}) );
     REQUIRE_FALSE( placements.at({-10,-30}) );
   }
 
   SECTION("Removal")
   {
-    placements.insert({{{4,8},9},{{-10,8},8}});
+    placements.insert( {{  4,8},9} );
+    placements.insert( {{-10,8},8} );
 
-    auto search { placements.at({-10,8}) };
+    auto search { placements.at( {-10,8} ) };
 
     REQUIRE( search );
 
     placements.erase( 8 );
 
-    search = placements.at({-10,8});
+    search = placements.at( {-10,8} );
 
     REQUIRE_FALSE( search );
   }

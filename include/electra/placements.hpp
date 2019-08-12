@@ -40,7 +40,7 @@ class Placements
     const_iterator<T> cend() const noexcept;
   // Public Methods
     template<typename U = std::pair<std::pair<T,T>,T>>
-    void insert(std::initializer_list<U> u) noexcept;
+    void insert(U&& u) noexcept;
     template<typename U = T>
     std::optional<std::pair<T,T>> find(U&& u) const noexcept;
     template<typename U = std::pair<T,T>>
@@ -81,12 +81,10 @@ const_iterator<T> Placements<T>::cend() const noexcept
 //
 template<typename T>
 template<typename U>
-void Placements<T>::insert(std::initializer_list<U> u) noexcept
+void Placements<T>::insert(U&& u) noexcept
 {
-  std::for_each(u.begin(), u.end(), [&](auto&& v){
-    this->placements_id->insert(v);
-    this->id_placements->insert({v.second,v.first});
-  });
+  this->id_placements->insert({u.second,u.first});
+  this->placements_id->insert(std::forward<U>(u));
 }
 
 template<typename T>
