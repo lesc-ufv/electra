@@ -28,9 +28,9 @@ namespace electra::area
     // Constructors
       Area() = default;
     // Methods
-      template<typename U>
+      template<typename U = std::vector<std::pair<T,T>>>
       void insert(U&& u) noexcept;
-      template<typename U>
+      template<typename U = std::vector<std::pair<T,T>>>
       void erase(U&& u) noexcept;
       std::pair<T,T> get_area() const noexcept;
   };

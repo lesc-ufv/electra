@@ -51,4 +51,20 @@ TEST_CASE("Placements testing unit", "[placements]")
 
     REQUIRE_FALSE( search );
   }
+
+  SECTION("Area")
+  {
+    placements.insert( {{ 0,2},1} );
+    placements.insert( {{-2,4},2} );
+
+    auto area { placements.get_area() };
+    REQUIRE( area.first == 3 );
+    REQUIRE( area.second == 3 );
+
+    placements.erase( 2 );
+
+    area = placements.get_area();
+    REQUIRE( area.first == 1 );
+    REQUIRE( area.second == 1 );
+  }
 }

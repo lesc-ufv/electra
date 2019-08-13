@@ -13,6 +13,7 @@
 #include <utility>
 #include <memory>
 #include <optional>
+#include <electra/area.hpp>
 
 namespace electra::placement {
 
@@ -31,6 +32,7 @@ class Placements
   // Private Members
     std::unique_ptr<ContainerA<T>> placements_id;
     std::unique_ptr<ContainerB<T>> id_placements;
+    std::unique_ptr<electra::area::Area<T>> area;
   // Public Members
   public:
   // Constructors
@@ -45,6 +47,7 @@ class Placements
     std::optional<std::pair<T,T>> find(U&& u) const noexcept;
     template<typename U = std::pair<T,T>>
     std::optional<T> at(U&& u) const noexcept;
+    std::pair<T,T> get_area() const noexcept;
     template<typename U>
     void erase(U&& u) const noexcept;
   // Private Methods
@@ -58,6 +61,7 @@ template<typename T>
 Placements<T>::Placements() noexcept
   : placements_id(std::make_unique<ContainerA<T>>())
   , id_placements(std::make_unique<ContainerB<T>>())
+  , area(std::make_unique<electra::area::Area<T>>())
 {
 }
 
@@ -83,6 +87,7 @@ template<typename T>
 template<typename U>
 void Placements<T>::insert(U&& u) noexcept
 {
+  this->area->insert({u.first});
   this->id_placements->insert({u.second,u.first});
   this->placements_id->insert(std::forward<U>(u));
 }
@@ -110,12 +115,19 @@ std::optional<T> Placements<T>::at(U&& u) const noexcept
 }
 
 template<typename T>
+std::pair<T,T> Placements<T>::get_area() const noexcept
+{
+  return this->area->get_area();
+}
+
+template<typename T>
 template<typename U>
 void Placements<T>::erase(U&& u) const noexcept
 {
   auto search {this->id_placements->find(u)};
   if ( search != this->id_placements->end() )
   {
+    this->area->erase( {search->second} );
     this->placements_id->erase(search->second);
     this->id_placements->erase(search);
   }
