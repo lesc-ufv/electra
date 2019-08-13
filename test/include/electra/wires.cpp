@@ -15,31 +15,31 @@ TEST_CASE("Wires" "[wires]")
   electra::wire::Wires<int32_t> wires;
   SECTION("Insertion")
   {
-    wires.add({{3,1},{3,2},{3,3},{3,4}});
-    auto wire {wires.get({3,1},{3,4})};
+    wires.insert({{3,1},{3,2},{3,3},{3,4}});
+    auto wire {wires.find({3,1},{3,4})};
 
     REQUIRE(wire->size() == 3);
   }
 
   SECTION("Removal")
   {
-    wires.add({{3,1},{3,2},{3,3},{3,4}});
+    wires.insert({{3,1},{3,2},{3,3},{3,4}});
     wires.erase({3,1},{3,4});
 
-    auto wire {wires.get({3,1},{3,4})};
+    auto wire {wires.find({3,1},{3,4})};
 
     REQUIRE(wire == wires.cend());
     REQUIRE(wires.size() == 0);
-    wires.add({{3,1},{3,2},{3,3},{3,4}});
+    wires.insert({{3,1},{3,2},{3,3},{3,4}});
     REQUIRE(wires.size() == 1);
   }
 
   SECTION("Json Read")
   {
-    wires.add({{3,1},{3,2},{3,3},{3,4}});
-    wires.add({{10,1},{9,1},{9,2},{9,3}});
-    wires.add({{3,1},{3,0},{3,-1},{3,-2}});
-    wires.add({{4,5},{5,5},{5,6},{5,7}});
+    wires.insert({{3,1},{3,2},{3,3},{3,4}});
+    wires.insert({{10,1},{9,1},{9,2},{9,3}});
+    wires.insert({{3,1},{3,0},{3,-1},{3,-2}});
+    wires.insert({{4,5},{5,5},{5,6},{5,7}});
     wires.write("wires.json");
 
     electra::wire::Wires<int32_t> _wires;

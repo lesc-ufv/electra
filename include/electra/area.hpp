@@ -29,10 +29,10 @@ namespace electra::area
       Area() = default;
     // Methods
       template<typename U>
-      void set(U&& u) noexcept;
+      void insert(U&& u) noexcept;
       template<typename U>
-      void unset(U&& u) noexcept;
-      std::pair<T,T> get() const noexcept;
+      void erase(U&& u) noexcept;
+      std::pair<T,T> get_area() const noexcept;
   };
 
   //
@@ -40,7 +40,7 @@ namespace electra::area
   //
   template<typename T>
   template<typename U>
-  void Area<T>::set(U&& u) noexcept
+  void Area<T>::insert(U&& u) noexcept
   {
     for( auto entry : u )
     {
@@ -57,7 +57,7 @@ namespace electra::area
 
   template<typename T>
   template<typename U>
-  void Area<T>::unset(U&& u) noexcept
+  void Area<T>::erase(U&& u) noexcept
   {
     for( auto entry : u )
     {
@@ -76,7 +76,7 @@ namespace electra::area
   }
 
   template<typename T>
-  std::pair<T,T> Area<T>::get() const noexcept
+  std::pair<T,T> Area<T>::get_area() const noexcept
   {
     if(x_map.empty()) return {0,0};
 

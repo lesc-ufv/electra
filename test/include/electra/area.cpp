@@ -25,7 +25,7 @@ TEST_CASE("Area", "[area]")
     REQUIRE(area.second == 0);
 
     // Setting a wire of length 4
-    wires.add({{3,0},{3,1},{3,2},{3,3}});
+    wires.insert({{3,0},{3,1},{3,2},{3,3}});
 
     // Updating the area
     area = wires.get_area();
@@ -38,7 +38,7 @@ TEST_CASE("Area", "[area]")
   SECTION("Removal")
   {
     // Setting a wire of length 4
-    wires.add({{3,0},{3,1},{3,2},{3,3}});
+    wires.insert({{3,0},{3,1},{3,2},{3,3}});
 
     // Removing the wire
     wires.erase({3,0},{3,3});
@@ -53,8 +53,8 @@ TEST_CASE("Area", "[area]")
   SECTION("Insertion and Removal")
   {
     // Setting the wires
-    wires.add({{3,0},{3,1},{3,2},{3,3}});
-    wires.add({{10,0},{9,0},{8,0},{8,1}});
+    wires.insert({{3,0},{3,1},{3,2},{3,3}});
+    wires.insert({{10,0},{9,0},{8,0},{8,1}});
 
     auto area {wires.get_area()};
 

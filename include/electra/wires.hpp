@@ -43,9 +43,9 @@ namespace electra::wire
       const_iterator<T> cend() const noexcept;
     // Public Methods
       template<typename U = std::vector<std::pair<T,T>>>
-      void add(U&& u) noexcept;
+      void insert(U&& u) noexcept;
       template<typename U = std::pair<T,T>>
-      auto get(U&& a, U&& b) noexcept;
+      auto find(U&& a, U&& b) noexcept;
       template<typename U = std::pair<T,T>>
       void erase(U&& a, U&& b) noexcept;
       template<typename U>
@@ -95,15 +95,15 @@ namespace electra::wire
   //
   template<typename T>
   template<typename U>
-  void Wires<T>::add(U&& u) noexcept
+  void Wires<T>::insert(U&& u) noexcept
   {
-    area->set(u);
+    area->insert(u);
     this->wires->emplace_back(wire::encode(u.cbegin(), u.cend()));
   }
 
   template<typename T>
   template<typename U>
-  auto Wires<T>::get(U&& a, U&& b) noexcept
+  auto Wires<T>::find(U&& a, U&& b) noexcept
   {
     return this->find_if(std::forward<U>(a),std::forward<U>(b));
   }
@@ -121,7 +121,7 @@ namespace electra::wire
     // the area class
     //
     auto decoded_wire { decode(it->cbegin(), it->cend()) };
-    area->unset( decoded_wire );
+    area->erase( decoded_wire );
 
     this->wires->erase( it );
   }
@@ -165,7 +165,7 @@ namespace electra::wire
   template<typename T>
   auto Wires<T>::get_area() const noexcept
   {
-    return this->area->get();
+    return this->area->get_area();
   }
 
   //
