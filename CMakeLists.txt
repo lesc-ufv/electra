@@ -16,13 +16,15 @@ project(
   LANGUAGES CXX
   )
 
-# Modules
+# CMake Modules
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(colors)
 define_colors()
 
-# Load External Libraries
+# External Libraries
 add_subdirectory(extern)
+
+# Source Files
 add_subdirectory(include)
 
 # Tests

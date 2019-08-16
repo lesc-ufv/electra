@@ -9,6 +9,8 @@
 //
 
 #include <electra/wires.hpp>
+#include <cstdio>
+#include <fstream>
 
 TEST_CASE("Wires" "[wires]")
 {
@@ -46,5 +48,8 @@ TEST_CASE("Wires" "[wires]")
     _wires.read("wires.json");
 
     REQUIRE(_wires.size() == 4);
+
+    // Delete file wires.json
+    std::remove("wires.json");
   }
 }
