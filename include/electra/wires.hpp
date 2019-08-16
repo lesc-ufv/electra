@@ -22,19 +22,25 @@
 
 namespace electra::wire
 {
+  // Data types
   template<typename T>
-  using Container = std::vector<std::vector<std::pair<T,T>>>;
+  using Wire = std::vector<std::vector<std::pair<T,T>>>;
+  template<typename T>
+  using const_iterator = typename Wire<T>::const_iterator;
 
+  // Dynamic memory storage
   template<typename T>
-  using const_iterator = typename Container<T>::const_iterator;
+  using Storage = std::unique_ptr<Wire<T>>;
+  template<typename T>
+  using Area = std::unique_ptr<area::Area<T>>;
 
   template<typename T>
   class Wires
   {
     private:
     // Private Members
-      std::unique_ptr<Container<T>> wires;
-      std::unique_ptr<area::Area<T>> area;
+      Storage<T> wires;
+      Area<T> area;
     public:
     // Constructors
       Wires();
@@ -42,23 +48,29 @@ namespace electra::wire
       const_iterator<T> cbegin() const noexcept;
       const_iterator<T> cend() const noexcept;
     // Public Methods
+      // Capacity
+      auto size() const noexcept;
+      auto get_area() const noexcept;
+      // Modifiers
       template<typename U = std::vector<std::pair<T,T>>>
       void insert(U&& u) noexcept;
       template<typename U = std::pair<T,T>>
-      auto find(U&& a, U&& b) noexcept;
-      template<typename U = std::pair<T,T>>
       void erase(U&& a, U&& b) noexcept;
+      // Lookup
+      template<typename U = std::pair<T,T>>
+      auto find(U&& a, U&& b) noexcept;
+      // Operations
       template<typename U>
       void write(U&& filename) const noexcept;
       template<typename U>
       void read(U&& filename) noexcept;
-      auto size() const noexcept;
-      auto get_area() const noexcept;
     private:
     // Private Methods
-      auto json() const noexcept;
+      // Lookup
       template<typename U>
       auto find_if(U&& a, U&& b) noexcept;
+      // Operations
+      auto json() const noexcept;
     public:
     // Operators
       template<typename U>
@@ -70,8 +82,10 @@ namespace electra::wire
   //
   template<typename T>
   Wires<T>::Wires()
-    : wires(std::make_unique<Container<T>>())
-    , area(std::make_unique<area::Area<T>>())
+    : wires(std::make_unique<
+      typename Storage<T>::element_type>())
+    , area(std::make_unique<
+      typename Area<T>::element_type>())
   {
   }
 
@@ -94,18 +108,23 @@ namespace electra::wire
   // Methods
   //
   template<typename T>
+  auto Wires<T>::size() const noexcept
+  {
+    return this->wires->size();
+  }
+
+  template<typename T>
+  auto Wires<T>::get_area() const noexcept
+  {
+    return this->area->get_area();
+  }
+
+  template<typename T>
   template<typename U>
   void Wires<T>::insert(U&& u) noexcept
   {
     area->insert(u);
     this->wires->emplace_back(wire::encode(u.cbegin(), u.cend()));
-  }
-
-  template<typename T>
-  template<typename U>
-  auto Wires<T>::find(U&& a, U&& b) noexcept
-  {
-    return this->find_if(std::forward<U>(a),std::forward<U>(b));
   }
 
   template<typename T>
@@ -125,6 +144,14 @@ namespace electra::wire
 
     this->wires->erase( it );
   }
+
+  template<typename T>
+  template<typename U>
+  auto Wires<T>::find(U&& a, U&& b) noexcept
+  {
+    return this->find_if(std::forward<U>(a),std::forward<U>(b));
+  }
+
 
   template<typename T>
   template<typename U>
@@ -148,41 +175,17 @@ namespace electra::wire
 
     if( file.good() )
     {
-      this->wires = std::make_unique<Container<T>>();
+      this->wires = std::make_unique<Wire<T>>();
       Json j;
       file >> j;
-      *this->wires = j.get<Container<T>>();
+      *this->wires = j.get<Wire<T>>();
     }
 
-  }
-
-  template<typename T>
-  auto Wires<T>::size() const noexcept
-  {
-    return this->wires->size();
-  }
-
-  template<typename T>
-  auto Wires<T>::get_area() const noexcept
-  {
-    return this->area->get_area();
   }
 
   //
   // Private Methods
   //
-  template<typename T>
-  auto Wires<T>::json() const noexcept
-  {
-    using Json = nlohmann::json;
-    Json j;
-    for(auto it{this->cbegin()}; it != this->cend(); ++it)
-    {
-      j += *it;
-    }
-    return j;
-  }
-
   template<typename T>
   template<typename U>
   auto Wires<T>::find_if(U&& a, U&& b) noexcept
@@ -193,6 +196,18 @@ namespace electra::wire
         return ( a == *(wire.begin()) ) && ( b == *(wire.rbegin()) );
       }
     );
+  }
+
+  template<typename T>
+  auto Wires<T>::json() const noexcept
+  {
+    using Json = nlohmann::json;
+    Json j;
+    for(auto it{this->cbegin()}; it != this->cend(); ++it)
+    {
+      j += *it;
+    }
+    return j;
   }
 
   //
