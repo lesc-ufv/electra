@@ -52,7 +52,7 @@ class Placements
     template<typename U = std::pair<T,T>>
     std::optional<T> at(U&& u) const noexcept;
     // Capacity
-    std::pair<T,T> get_area() const noexcept;
+    auto size() const noexcept;
     // Modifiers
     template<typename U = std::pair<std::pair<T,T>,T>>
     void insert(U&& u) noexcept;
@@ -61,6 +61,7 @@ class Placements
     // Lookup
     template<typename U = T>
     std::optional<std::pair<T,T>> find(U&& u) const noexcept;
+    std::pair<T,T> get_area() const noexcept;
 };
 
 //
@@ -108,9 +109,9 @@ std::optional<T> Placements<T>::at(U&& u) const noexcept
 }
 
 template<typename T>
-std::pair<T,T> Placements<T>::get_area() const noexcept
+auto Placements<T>::size() const noexcept
 {
-  return this->area->get_area();
+  return this->id_placements->size();
 }
 
 template<typename T>
@@ -144,6 +145,12 @@ std::optional<std::pair<T,T>> Placements<T>::find(U&& u) const noexcept
   if ( search == this->id_placements->cend() )
     return std::nullopt;
   return search->second;
+}
+
+template<typename T>
+std::pair<T,T> Placements<T>::get_area() const noexcept
+{
+  return this->area->get_area();
 }
 
 } // namespace electra::placement

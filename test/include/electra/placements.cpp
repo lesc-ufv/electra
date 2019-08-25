@@ -67,4 +67,20 @@ TEST_CASE("Placements testing unit", "[placements]")
     REQUIRE( area.first == 1 );
     REQUIRE( area.second == 1 );
   }
+
+  SECTION("Size")
+  {
+    placements.insert( {{  4,8},9} );
+    placements.insert( {{-10,8},8} );
+
+    REQUIRE( placements.size() == 2 );
+
+    placements.erase(9);
+
+    REQUIRE( placements.size() == 1 );
+
+    placements.erase(8);
+
+    REQUIRE( placements.size() == 0 );
+  }
 }
