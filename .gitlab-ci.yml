@@ -1,0 +1,13 @@
+pages:
+  image: "rustlang/rust:nightly"
+  script:
+    - cargo install mdbook --no-default-features
+    - mdbook build doc/mdbook
+    - mv doc/mdbook/book public
+
+  artifacts:
+    paths:
+      - public
+
+  only:
+    - master
