@@ -28,9 +28,9 @@ add_subdirectory(extern)
 add_subdirectory(include)
 
 # Tests
-option(${PROJECT_NAME}_tests "Enable Testing Modules" OFF)
+option(${PROJECT_NAME}_test "Enable Testing Modules" OFF)
 
-if( ${PROJECT_NAME}_tests )
+if( ${PROJECT_NAME}_test )
   message(STATUS "${C_BLUE} * ${C_RESET}${PROJECT_NAME} testing enabled")
   add_subdirectory(test)
 endif()

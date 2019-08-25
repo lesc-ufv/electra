@@ -8,5 +8,5 @@
 # @description : Electra - Field-Coupled Nanocomputing Data Structures
 ######################################################################
 
-add_executable(tests tests.cpp)
-target_link_libraries(tests PRIVATE electra Catch2)
+add_executable(test test.cpp)
+target_link_libraries(test PRIVATE electra Catch2)
