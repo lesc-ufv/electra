@@ -32,7 +32,8 @@ your C++ project.
 
 ## Functionalities
 
-You can read the full api documentation in my [gitlab pages](#).
+You can read the full api documentation in my
+[gitlab pages](https://formigoni.gitlab.io/electra/).
 
 For a quick summary, here's my list of features:
 
