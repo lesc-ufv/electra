@@ -50,7 +50,6 @@ class Wires
   // Public Methods
     // Capacity
     auto size() const noexcept;
-    auto get_area() const noexcept;
     // Modifiers
     template<typename U = std::vector<std::pair<T,T>>>
     void insert(U&& u) noexcept;
@@ -60,6 +59,7 @@ class Wires
     template<typename U = std::pair<T,T>>
     std::optional<const_iterator::const_iterator<_Wires<T>,
       typename _Wires<T>::const_iterator>> find(U&& a, U&& b) noexcept;
+    auto get_area() const noexcept;
     // Operations
     template<typename U>
     void write(U&& filename) const noexcept;
@@ -117,20 +117,6 @@ auto Wires<T>::size() const noexcept
 }
 
 template<typename T>
-auto Wires<T>::get_area() const noexcept
-{
-  return this->area->get_area();
-}
-
-template<typename T>
-template<typename U>
-void Wires<T>::insert(U&& u) noexcept
-{
-  area->insert(u);
-  this->wires->emplace_back(wire::encode(u.cbegin(), u.cend()));
-}
-
-template<typename T>
 template<typename U>
 void Wires<T>::erase(U&& a, U&& b) noexcept
 {
@@ -163,6 +149,21 @@ std::optional<const_iterator::const_iterator<_Wires<T>,
     return const_iterator::const_iterator(*this->wires, search);
   }
 }
+
+template<typename T>
+auto Wires<T>::get_area() const noexcept
+{
+  return this->area->get_area();
+}
+
+template<typename T>
+template<typename U>
+void Wires<T>::insert(U&& u) noexcept
+{
+  area->insert(u);
+  this->wires->emplace_back(wire::encode(u.cbegin(), u.cend()));
+}
+
 
 
 template<typename T>
