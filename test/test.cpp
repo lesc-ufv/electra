@@ -12,8 +12,8 @@
 
 #include <catch2/catch.hpp>
 
-template<typename InIt, typename T = typename InIt::value_type>
-void compare(InIt&& cbegin, InIt&& cend, InIt&& target)
+template<typename InIt1, typename InIt2, typename T = typename InIt1::value_type>
+void compare(InIt1&& cbegin, InIt1&& cend, InIt2&& target)
 {
   for( auto it{cbegin}; it!=cend;)
   {
