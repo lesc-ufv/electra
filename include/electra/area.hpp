@@ -12,31 +12,39 @@
 #include <utility>
 #include <map>
 
+#include <nlohmann/json.hpp>
+
 namespace electra::area
 {
+  template<typename T>
+  using X = std::map<T, T>;
+  template<typename T>
+  using Y = std::map<T, T>;
+
   template<typename T>
   class Area
   {
 
-    using X = std::map<T, T>;
-    using Y = std::map<T, T>;
-
     private:
-      X x_map;
-      Y y_map;
+      X<T> x_map;
+      Y<T> y_map;
     public:
-    // Constructors
-      Area() = default;
-    // Methods
+    // Public Methods
+      // Element Access
       template<typename U = std::vector<std::pair<T,T>>>
       void insert(U&& u) noexcept;
       template<typename U = std::vector<std::pair<T,T>>>
       void erase(U&& u) noexcept;
       std::pair<T,T> get_area() const noexcept;
+      // Operations
+      template<typename _T>
+      friend void to_json(nlohmann::json& j, Area<_T> const& area);
+      template<typename _T>
+      friend void from_json(const nlohmann::json& j, Area<_T>& area);
   };
 
   //
-  // Methods
+  // Public Methods
   //
   template<typename T>
   template<typename U>
@@ -90,4 +98,18 @@ namespace electra::area
 
     return {x_delta,y_delta};
   }
+
+  template<typename _T>
+  void to_json(nlohmann::json& j, Area<_T> const& area)
+  {
+    j = nlohmann::json{{"x",area.x_map}, {"y",area.y_map}};
+  }
+
+  template<typename _T>
+  void from_json(const nlohmann::json& j, Area<_T>& area)
+  {
+      j.at("x").get_to(area.x_map);
+      j.at("y").get_to(area.y_map);
+  }
+
 } // namespace electra::area

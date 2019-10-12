@@ -9,10 +9,13 @@
 //
 
 #include <electra/placements.hpp>
+#include <filesystem>
 
 TEST_CASE("Placements testing unit", "[placements]")
 {
-  electra::placement::Placements<int32_t> placements;
+  using Placements = electra::placement::Placements<int32_t>;
+
+  Placements placements;
 
   SECTION("Insertion")
   {
@@ -83,4 +86,29 @@ TEST_CASE("Placements testing unit", "[placements]")
 
     REQUIRE( placements.size() == 0 );
   }
+
+  SECTION("Json I/O")
+  {
+    placements.insert( {{8,8},9} );
+    placements.insert( {{4,3},7} );
+    placements.insert( {{1,2},5} );
+    placements.insert( {{0,8},1} );
+
+    std::filesystem::create_directory("./test/json-output/");
+
+    placements.write("./test/json-output/");
+
+    Placements test;
+    test.read("./test/json-output/");
+
+    REQUIRE(test.size() == 4);
+    REQUIRE(*test.find(1) == std::make_pair(0,8));
+    REQUIRE(*test.find(5) == std::make_pair(1,2));
+    REQUIRE(*test.find(7) == std::make_pair(4,3));
+    REQUIRE(*test.find(9) == std::make_pair(8,8));
+    REQUIRE(test.get_area() == std::make_pair(9,7));
+
+    std::filesystem::remove_all("./test/json-output");
+  }
+
 }

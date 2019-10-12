@@ -13,7 +13,10 @@
 #include <utility>
 #include <memory>
 #include <optional>
+#include <fstream>
+
 #include <electra/area.hpp>
+#include <nlohmann/json.hpp>
 
 namespace electra::placement {
 
@@ -62,6 +65,12 @@ class Placements
     template<typename U = T>
     std::optional<std::pair<T,T>> find(U&& u) const noexcept;
     std::pair<T,T> get_area() const noexcept;
+  // Private Methods
+    // Operations
+    template<typename U>
+    void write(U&& path) const noexcept;
+    template<typename U>
+    void read(U&& path) noexcept;
 };
 
 //
@@ -152,5 +161,61 @@ std::pair<T,T> Placements<T>::get_area() const noexcept
 {
   return this->area->get_area();
 }
+
+//
+// Private Methods
+//
+
+//
+// Operations
+//
+template<typename T>
+template<typename U>
+void Placements<T>::write(U&& path) const noexcept
+{
+  using Json = nlohmann::json;
+
+  Json j1, j2, j3;
+
+  j1 = *this->placements_id;
+  j2 = *this->id_placements;
+  j3 = *this->area;
+
+  std::ofstream os1{std::forward<U>(path) + std::string{"pid.json"}};
+  std::ofstream os2{std::forward<U>(path) + std::string{"idp.json"}};
+  std::ofstream os3{std::forward<U>(path) + std::string{"area.json"}};
+
+  if( ! os1.good() || ! os2.good() || ! os3.good() ) return;
+
+  os1 << j1; os2 << j2; os3 << j3;
+
+}
+
+template<typename T>
+template<typename U>
+void Placements<T>::read(U&& path) noexcept
+{
+  using Json = nlohmann::json;
+
+  std::ifstream is1{std::forward<U>(path) + std::string{"pid.json"}};
+  std::ifstream is2{std::forward<U>(path) + std::string{"idp.json"}};
+  std::ifstream is3{std::forward<U>(path) + std::string{"area.json"}};
+
+  if( ! is1.good() || ! is2.good() || ! is3.good() ) return;
+
+  Json j1, j2, j3;
+
+  is1 >> j1; is2 >> j2; is3 >> j3;
+
+  this->placements_id = std::make_unique<PlacementIdData<T>>();
+  this->id_placements = std::make_unique<IdPlacementData<T>>();
+  this->area = std::make_unique<electra::area::Area<T>>();
+
+
+  *this->placements_id = j1.get<PlacementIdData<T>>();
+  *this->id_placements = j2.get<IdPlacementData<T>>();
+  *this->area = j3.get<electra::area::Area<T>>();
+}
+
 
 } // namespace electra::placement
