@@ -14,6 +14,7 @@
 #include <memory>
 #include <optional>
 #include <fstream>
+#include <type_traits>
 
 #include <electra/area.hpp>
 #include <nlohmann/json.hpp>
@@ -71,6 +72,9 @@ class Placements
     void write(U&& path) const noexcept;
     template<typename U>
     void read(U&& path) noexcept;
+  // Static Assertions
+    static_assert(std::is_integral<T>::value, "T must be of an integral type");
+    static_assert(std::is_signed<T>::value, "T must be of a signed type");
 };
 
 //

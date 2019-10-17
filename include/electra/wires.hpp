@@ -76,6 +76,9 @@ class Wires
   // Operators
     template<typename U>
     friend std::ostream& operator<<(std::ostream& os, Wires<U> const& wires);
+  // Static Assertions
+    static_assert(std::is_integral<T>::value, "T must be of an integral type");
+    static_assert(std::is_signed<T>::value, "T must be of a signed type");
 };
 
 //
